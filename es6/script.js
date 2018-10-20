@@ -125,8 +125,10 @@ var box5 = {
 	color: 'green',
 	position: 1,
 	clickMe: function () {
+		// required, since event callback resets `this` to point to DOM element
 		var self = this;
 		document.querySelector('.green').addEventListener( 'click', function () {
+			console.log(this);
 			var str = 'This is box number ' + self.position + ' and it is ' + self.color;
 			alert(str);
 		});
@@ -151,6 +153,56 @@ const box6 = {
 box6.clickMe();
 
 
+// ES6
+// const box66 = {
+// 	color: 'orange',
+// 	position: 2,
+// 	clickMe() {
+// 		document.querySelector('.orange').addEventListener( 'click', () => {
+// 			const str = `This is box number ${this.position} and it is ${this.color}`;
+// 			alert(str);
+// 		});
+// 	}
+// };
+
+// box66.clickMe();
+
+
+function Person ( name ) {
+	this.name = name;
+}
+
+// ES5
+Person.prototype.myFriends5 = function ( friends ) {
+	// retain context
+	var self = this;
+	var arr = friends.map( function ( friend ) {
+		return self.name + ' is friends with ' + friend;
+	});
+	return arr;
+}
+
+// ES5
+Person.prototype.myFriends55 = function ( friends ) {
+	// retain context
+	var arr = friends.map( function ( friend ) {
+		return this.name + ' is friends with ' + friend;
+	}.bind( this ));
+	return arr;
+}
+
+
+// ES6
+Person.prototype.myFriends6 = function ( friends ) {
+	return friends.map( friend => `${this.name} is friends with ${friend}` );
+}
+
+
+var friends = [ 'Bob', 'Jane', 'Mark' ];
+
+console.log( new Person( 'Foo' ).myFriends5( friends ) );
+console.log( new Person( 'Bar' ).myFriends55( friends ) );
+console.log( new Person( 'Baz' ).myFriends6( friends ) );
 
 
 
